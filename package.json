@@ -1,26 +1,41 @@
 {
-  "name": "pkg-placeholder",
+  "name": "@markterence/utils",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@9.15.4",
   "description": "_description_",
-  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "author": "Mark Terence Tiglao <markterencetiglao@gmail.com>",
   "license": "MIT",
-  "funding": "https://github.com/sponsors/antfu",
-  "homepage": "https://github.com/antfu/pkg-placeholder#readme",
+  "funding": "https://github.com/sponsors/markterence",
+  "homepage": "https://github.com/markterence",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/pkg-placeholder.git"
+    "url": "git+https://github.com/markterence/utils.git"
   },
-  "bugs": "https://github.com/antfu/pkg-placeholder/issues",
+  "bugs": "https://github.com/markterence/utils/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./validator": {
+      "types": {
+        "import": "./dist/validator/index.d.ts",
+        "require": "./dist/validator/index.d.cts"
+      },
+      "import": "./dist/validator/index.js",
+      "require": "./dist/validator/index.cjs"
+    }
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
@@ -33,9 +48,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
-    "dev": "unbuild --stub",
+    "build": "tsup --format esm,cjs --clean --dts",
+    "stub": "tsup --format esm",
+    "watch": "npm run build -- --watch src",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "prepublishOnly": "nr build",
     "release": "bumpp && pnpm publish",
     "start": "tsx src/index.ts",
@@ -53,6 +70,7 @@
     "lint-staged": "^15.3.0",
     "pnpm": "^9.15.4",
     "simple-git-hooks": "^2.11.1",
+    "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "unbuild": "^3.3.1",
