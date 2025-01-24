@@ -50,10 +50,13 @@ export function obfuscateEmail(emailStr: string, replaceOptions: ObfuscateEmailO
     defaults.keepNameLast = 0;
   }
 
-  // When the domain falls within the keep range, keep only the first character and obfuscate the rest.
-  if (emailDomain.length <= defaults.keepDomainFirst! + defaults.keepDomainLast!) {
-    defaults.keepDomainFirst = 1;
-    defaults.keepDomainLast = 0;
+  // Rare case where the username is only one character.
+  // In this case, just obfuscate the entire username.
+  // ProtonMail does auction off single character usernames, like 'x@proton.me'.
+  // Self-hosted email servers may also allow single character usernames.
+  if (emailUsername.length === 1) {
+    defaults.keepNameFirst = 0;
+    defaults.keepNameLast = 0;
   }
 
   const censoredUsername = obfuscateString(emailUsername, {
@@ -63,12 +66,41 @@ export function obfuscateEmail(emailStr: string, replaceOptions: ObfuscateEmailO
     keepSpace: false,
   });
 
-  const censoredDomain = obfuscateString(emailDomain, {
-    replacementChar: defaults.replacementChar,
-    keepFirst: defaults.keepDomainFirst,
-    keepLast: defaults.keepDomainLast,
-    keepSpace: false,
+  // Sometimes, the domain has multiple parts, such as 'example.co.uk'.
+  // Or sometimes it has a subdomain, such as 'sub.example.com' or combinations of both.
+  // In these cases, we need to split the domain into parts and obfuscate each part separately.
+  const domainParts = emailDomain.split('.');
+
+  const censoredDomainParts = domainParts.map((part) => {
+    let keepFirst = defaults.keepDomainFirst;
+    let keepLast = defaults.keepDomainLast;
+
+    if (part.length === 1) {
+      return defaults.replacementChar;
+    }
+
+    if (part.length === 2) {
+      return part[0] + defaults.replacementChar;
+    }
+
+    if (part.length <= keepFirst! + keepLast!) {
+      keepFirst = 1;
+      keepLast = 0;
+    }
+
+    if (keepLast! > part.length) {
+      keepLast = 0;
+    }
+
+    return obfuscateString(part, {
+      replacementChar: defaults.replacementChar,
+      keepFirst,
+      keepLast,
+      keepSpace: false,
+    });
   });
+
+  const censoredDomain = censoredDomainParts.join('.');
 
   return `${censoredUsername}@${censoredDomain}`;
 }
