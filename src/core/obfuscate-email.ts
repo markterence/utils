@@ -4,8 +4,8 @@ interface ObfuscateEmailOptions {
   /**
    * The number of characters to keep from the start of the name.
    */
-
   keepNameFirst?: number;
+
   /**
    * The number of characters to keep from the end of the name.
    */
@@ -37,6 +37,19 @@ const defaultOptions: ObfuscateEmailOptions = {
   replacementChar: '*',
 };
 
+/**
+ * Obfuscates an email address by replacing parts of the username and domain with a specified character.
+ *
+ * @param emailStr - The email address to obfuscate.
+ * @param replaceOptions - Optional settings to customize the obfuscation process.
+ * @returns The obfuscated email address.
+ *
+ * @example
+ * ```ts
+ * const email = 'foo@example.com';
+ * const result = obfuscateEmail(email); // f**@ex*****e.c**
+ * ```
+ */
 export function obfuscateEmail(emailStr: string, replaceOptions: ObfuscateEmailOptions = {}): string {
   const defaults = { ...defaultOptions, ...replaceOptions };
   const parts = emailStr.split('@');
