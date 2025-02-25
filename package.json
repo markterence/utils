@@ -60,6 +60,9 @@
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"
   },
+  "dependencies": {
+    "dayjs": "^1.11.13"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^3.14.0",
     "@antfu/ni": "^23.2.0",
