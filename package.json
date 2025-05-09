@@ -58,7 +58,8 @@
     "start": "tsx src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "postinstall": "pnpm run build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.14.0",
