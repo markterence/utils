@@ -31,6 +31,20 @@
       },
       "import": "./dist/validator/index.js",
       "require": "./dist/validator/index.cjs"
+    },
+    "./core/date-time-dayjs": {
+      "types": {
+        "import": "./dist/core/date-time-dayjs/index.d.ts",
+        "require": "./dist/core/date-time-dayjs/index.d.cts"
+      },
+      "import": "./dist/core/date-time-dayjs/index.js",
+      "require": "./dist/core/date-time-dayjs/index.cjs"
+    },
+    "./user-module-loader": {
+      "types": {
+        "import": "./dist/vue/user-module-loader/index.d.ts"
+      },
+      "import": "./dist/vue/user-module-loader/index.js"
     }
   },
   "main": "./dist/index.cjs",
@@ -48,7 +62,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup --format esm,cjs --clean --dts",
+    "build": "tsup",
     "stub": "tsup --format esm",
     "watch": "npm run build -- --watch src",
     "lint": "eslint .",
@@ -74,12 +88,13 @@
     "lint-staged": "^15.3.0",
     "pnpm": "^9.15.4",
     "simple-git-hooks": "^2.11.1",
-    "tsup": "^8.3.5",
+    "tsup": "^8.5.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "unbuild": "^3.3.1",
     "vite": "^6.0.7",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "vue": "^3.5.17"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
