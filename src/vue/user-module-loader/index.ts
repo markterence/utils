@@ -31,12 +31,34 @@ export interface IUserModule {
   install: (ctx: UserModuleContext) => void;
 }
 
+export interface LoadUserModuleOptions {
+  /**
+   * Directory where the user modules are located.
+   * Defaults to './plugins'.
+   */
+  pluginsDirectory?: string;
+  /**
+   * List of plugin file names to load. The file names should be relative to the `pluginsDirectory`.
+   *
+   * For example, if the file is located at `./plugins/my-plugin.ts`, you
+   * should include it as `my-plugin.ts` in the list.
+   *
+   * @example
+   * ```ts
+   * loadUserModules(ctx, {
+   *   plugins: ['pinia.ts', 'vue-router.ts']
+   * });
+   */
+  plugins?: string[];
+}
+
 /**
  *
  * @param ctx Context object that will be passed to the user modules.
- * @param plugins
+ * @param plugins List of plugin file names to load.
  */
-export function loadUserModules(ctx: UserModuleContext, plugins: string[]): void {
+export function loadUserModules(ctx: UserModuleContext, options: LoadUserModuleOptions): void {
+  const { pluginsDirectory = './plugins', plugins = [] } = options;
   const _ctx = ctx as LoadUserModulePrivateContext;
   _ctx._mountedHooks = [];
 
@@ -55,8 +77,10 @@ export function loadUserModules(ctx: UserModuleContext, plugins: string[]): void
   };
   _ctx.addToContext = addToContext;
 
-  // import the files
-  const userModules = import.meta.glob<{ install: any }>(['./*.ts', '!./index.ts', '!./*.d.ts'], {
+  const globPattern = (): string[] => {
+    return [`${pluginsDirectory}/*.ts`, `!${pluginsDirectory}/index.ts`, `!${pluginsDirectory}/*.d.ts`];
+  };
+  const userModules = import.meta.glob<{ install: any }>(globPattern(), {
     eager: true,
   });
 
